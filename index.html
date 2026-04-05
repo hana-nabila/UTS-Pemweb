@@ -1,110 +1,183 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App - Astra</title>
+    <title>Aplikasi Catatan</title>
     <style>
-        * { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; box-sizing: border-box; }
-        body { background: #121212; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        
-        .card {
-            width: 90%; max-width: 400px;
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            color: #fff; padding: 40px 35px; border-radius: 20px; text-align: center;
+        /* --- SEMUA CSS DI SINI --- */
+        body {
+            background-color: #1a1a1b;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
         }
-
-        .search { width: 100%; display: flex; align-items: center; justify-content: space-between; }
-        .search input {
-            border: 0; outline: 0; background: #ebfffc; color: #555;
-            padding: 10px 25px; height: 50px; border-radius: 30px; flex: 1; margin-right: 16px; font-size: 18px;
+        .container {
+            width: 100%;
+            max-width: 800px;
         }
-
-        .search button {
-            border: 0; outline: 0; background: #ebfffc; border-radius: 50%;
-            width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        .weather-icon { width: 140px; margin-top: 30px; }
-        .temp { font-size: 80px; font-weight: 500; }
-        .city { font-size: 45px; font-weight: 400; margin-top: -10px; }
-        .details { display: flex; align-items: center; justify-content: space-between; padding: 0 20px; margin-top: 50px; }
-        .col { display: flex; align-items: center; text-align: left; }
-        .col img { width: 40px; margin-right: 10px; }
+        .search-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        input, textarea {
+            background-color: #272729;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            color: white;
+            font-size: 16px;
+        }
+        textarea {
+            height: 150px;
+            resize: none;
+        }
+        button#addBtn {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        button#addBtn:hover {
+            background-color: #ddd;
+        }
+        .notes-display {
+            margin-top: 40px;
+        }
+        hr {
+            border: 0.5px solid #333;
+            margin-bottom: 20px;
+        }
+        .note-card {
+            background-color: #212529;
+            border: 1px solid #343a40;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .note-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        .note-date {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+        .note-content {
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-delete {
+            background: none;
+            border: 1px solid #444;
+            color: #ff4d4d;
+            padding: 5px 15px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .btn-archive {
+            background: none;
+            border: 1px solid #444;
+            color: #ffcc00;
+            padding: 5px 15px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <div class="search">
-            <input type="text" placeholder="Masukkan nama kota" id="cityInput">
-            <button id="searchBtn">
-                <img src="https://cdn-icons-png.flaticon.com/512/149/149852.png" width="20px">
-            </button>
-        </div>
-        <div class="weather">
-            <img src="https://cdn-icons-png.flaticon.com/512/4814/4814268.png" class="weather-icon" id="mainIcon">
-            <h1 class="temp">--°c</h1>
-            <h2 class="city">Cari Kota</h2>
-            <div class="details">
-                <div class="col">
-                    <img src="https://cdn-icons-png.flaticon.com/512/727/727790.png">
-                    <div><p class="humidity">--%</p><p>Humidity</p></div>
+    <div class="container">
+        <header>
+            <h1>Buat Catatan</h1>
+            <div class="search-icon">🔍</div>
+        </header>
+
+        <section class="input-section">
+            <input type="text" id="noteTitle" placeholder="Judul">
+            <textarea id="noteBody" placeholder="Isi catatan..."></textarea>
+            <button id="addBtn">TAMBAH CATATAN</button>
+        </section>
+
+        <section class="notes-display">
+            <h2>Catatan</h2>
+            <hr>
+            <div id="notesList">
                 </div>
-                <div class="col">
-                    <img src="https://cdn-icons-png.flaticon.com/512/959/959711.png">
-                    <div><p class="wind">-- km/h</p><p>Wind Speed</p></div>
-                </div>
-            </div>
-        </div>
+        </section>
     </div>
 
     <script>
-        // MASUKKAN API KEY KAMU DI SINI
-        const apiKey = "YOUR_API_KEY_DISINI"; 
+        // --- SEMUA JAVASCRIPT DI SINI ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const addBtn = document.getElementById('addBtn');
+            const titleInput = document.getElementById('noteTitle');
+            const bodyInput = document.getElementById('noteBody');
+            const notesList = document.getElementById('notesList');
 
-        const cityInput = document.getElementById("cityInput");
-        const searchBtn = document.getElementById("searchBtn");
-        const mainIcon = document.getElementById("mainIcon");
+            addBtn.addEventListener('click', () => {
+                const title = titleInput.value.trim();
+                const body = bodyInput.value.trim();
 
-        async function checkWeather(city) {
-            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${city}&appid=${apiKey}`;
-            
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-
-                if (response.status == 404) {
-                    alert("Kota tidak ditemukan!");
+                // Validasi agar tidak kosong
+                if (title === '' || body === '') {
+                    alert('Judul dan isi catatan tidak boleh kosong ya!');
                     return;
                 }
 
-                if (response.status == 401) {
-                    alert("API Key salah atau belum aktif (tunggu 1-2 jam setelah daftar)");
-                    return;
-                }
+                // Membuat format tanggal Indonesia
+                const date = new Date();
+                const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+                const formattedDate = date.toLocaleDateString('id-ID', options);
 
-                document.querySelector(".city").innerHTML = data.name;
-                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°c";
-                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
-                document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+                // Buat elemen catatan baru
+                const noteCard = document.createElement('div');
+                noteCard.classList.add('note-card');
 
-                // Update Icon
-                if(data.weather[0].main == "Clouds") mainIcon.src = "https://cdn-icons-png.flaticon.com/512/414/414825.png";
-                else if(data.weather[0].main == "Clear") mainIcon.src = "https://cdn-icons-png.flaticon.com/512/4814/4814268.png";
-                else if(data.weather[0].main == "Rain") mainIcon.src = "https://cdn-icons-png.flaticon.com/512/3351/3351979.png";
+                noteCard.innerHTML = `
+                    <h3>${title}</h3>
+                    <p class="note-date">${formattedDate}</p>
+                    <p class="note-content">${body}</p>
+                    <div class="actions">
+                        <button class="btn-delete">Hapus</button>
+                        <button class="btn-archive">Arsipkan</button>
+                    </div>
+                `;
 
-            } catch (err) {
-                console.error("Terjadi kesalahan:", err);
-            }
-        }
+                // Logika tombol hapus di dalam kartu catatan
+                noteCard.querySelector('.btn-delete').addEventListener('click', () => {
+                    noteCard.remove();
+                });
 
-        searchBtn.addEventListener("click", () => {
-            checkWeather(cityInput.value);
-        });
+                // Masukkan catatan paling baru di posisi paling atas
+                notesList.prepend(noteCard);
 
-        cityInput.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") checkWeather(cityInput.value);
+                // Kosongkan kembali form input
+                titleInput.value = '';
+                bodyInput.value = '';
+            });
         });
     </script>
 </body>

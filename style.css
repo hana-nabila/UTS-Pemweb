@@ -1,110 +1,111 @@
-* {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    box-sizing: border-box;
-}
-
 body {
-    background: #121212; /* Dark background profesional */
+    background-color: #1a1a1b;
+    color: white;
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    padding: 20px;
 }
 
-.card {
-    width: 90%;
-    max-width: 420px;
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-    color: #fff;
-    padding: 40px 35px;
-    border-radius: 25px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-}
-
-.search {
+.container {
     width: 100%;
+    max-width: 800px;
+}
+
+header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
 }
 
-.search input {
-    border: 0;
-    outline: 0;
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    padding: 10px 25px;
-    height: 50px;
-    border-radius: 30px;
-    flex: 1;
-    margin-right: 15px;
-    font-size: 18px;
+/* Input Styles */
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
 }
 
-/* Mengubah warna placeholder agar terlihat di background transparan */
-.search input::placeholder {
-    color: #f0f0f0;
+input, textarea {
+    background-color: #272729;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 15px;
+    color: white;
+    font-size: 16px;
 }
 
-.search button {
-    border: 0;
-    outline: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
+textarea {
+    height: 150px;
+    resize: none;
+}
+
+button {
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 12px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s ease;
+    border-radius: 4px;
 }
 
-.search button:hover {
-    background: rgba(255, 255, 255, 0.4);
+button:hover {
+    background-color: #ddd;
 }
 
-.search button img {
-    width: 18px;
-    filter: invert(1); /* Membuat ikon search jadi putih */
+/* Notes List Styles */
+.notes-display {
+    margin-top: 40px;
 }
 
-.weather-icon {
-    width: 140px;
-    margin-top: 30px;
+hr {
+    border: 0.5px solid #444;
+    margin-bottom: 20px;
 }
 
-.temp {
-    font-size: 70px;
-    font-weight: 600;
+.note-card {
+    background-color: #212529;
+    border: 1px solid #343a40;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 15px;
 }
 
-.city {
-    font-size: 40px;
-    font-weight: 400;
-    margin-top: -10px;
+.note-card h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
 }
 
-.details {
+.note-date {
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 15px;
+}
+
+.note-content {
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+/* Action Buttons */
+.actions {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 10px;
-    margin-top: 50px;
+    gap: 10px;
 }
 
-.col {
-    display: flex;
-    align-items: center;
-    text-align: left;
+.btn-delete {
+    background: none;
+    border: 1px solid #444;
+    color: #ff4d4d;
+    padding: 5px 15px;
+    cursor: pointer;
 }
 
-.col img {
-    width: 35px;
-    margin-right: 12px;
-}
-
-.humidity, .wind {
-    font-size: 20px;
-    font-weight: 500;
+.btn-archive {
+    background: none;
+    border: 1px solid #444;
+    color: #ffcc00;
+    padding: 5px 15px;
+    cursor: pointer;
 }
