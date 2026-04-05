@@ -3,76 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Image Generator UI</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Weather App - Astra</title>
+    <style>
+        * { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; box-sizing: border-box; }
+        body { background: #121212; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        
+        .card {
+            width: 90%; max-width: 400px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: #fff; padding: 40px 35px; border-radius: 20px; text-align: center;
+        }
+
+        .search { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+        .search input {
+            border: 0; outline: 0; background: #ebfffc; color: #555;
+            padding: 10px 25px; height: 50px; border-radius: 30px; flex: 1; margin-right: 16px; font-size: 18px;
+        }
+
+        .search button {
+            border: 0; outline: 0; background: #ebfffc; border-radius: 50%;
+            width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+
+        .weather-icon { width: 140px; margin-top: 30px; }
+        .temp { font-size: 80px; font-weight: 500; }
+        .city { font-size: 45px; font-weight: 400; margin-top: -10px; }
+        .details { display: flex; align-items: center; justify-content: space-between; padding: 0 20px; margin-top: 50px; }
+        .col { display: flex; align-items: center; text-align: left; }
+        .col img { width: 40px; margin-right: 10px; }
+    </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="card" id="generatorCard">
-            <div class="header">
-                <div class="logo-section">
-                    <div class="icon-box">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </div>
-                    <h1>AI Image Generator</h1>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Masukkan nama kota" id="cityInput">
+            <button id="searchBtn">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149852.png" width="20px">
+            </button>
+        </div>
+        <div class="weather">
+            <img src="https://cdn-icons-png.flaticon.com/512/4814/4814268.png" class="weather-icon" id="mainIcon">
+            <h1 class="temp">--°c</h1>
+            <h2 class="city">Cari Kota</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="https://cdn-icons-png.flaticon.com/512/727/727790.png">
+                    <div><p class="humidity">--%</p><p>Humidity</p></div>
                 </div>
-                <button class="theme-toggle" id="themeBtn">
-                    <i class="fa-solid fa-moon"></i>
-                </button>
-            </div>
-
-            <div class="input-group">
-                <textarea placeholder="Describe your imagination in detail..."></textarea>
-                <div class="dice-icon">
-                    <i class="fa-solid fa-dice-five"></i>
+                <div class="col">
+                    <img src="https://cdn-icons-png.flaticon.com/512/959/959711.png">
+                    <div><p class="wind">-- km/h</p><p>Wind Speed</p></div>
                 </div>
-            </div>
-
-            <div class="controls">
-                <div class="select-wrapper">
-                    <select id="model">
-                        <option value="" disabled selected>Select Model</option>
-                        <option value="FLUX.1-dev">FLUX.1-dev</option>
-                        <option value="FLUX.1-schnell">FLUX.1-schnell</option>
-                        <option value="Stable Diffusion XL">Stable Diffusion XL</option>
-                        <option value="Stable Diffusion 1.5">Stable Diffusion 1.5</option>
-                        <option value="Stable Diffusion 3">Stable Diffusion 3</option>
-                        <option value="Openjourney">Openjourney</option>
-                    </select>
-                </div>
-
-                <div class="select-wrapper">
-                    <select id="imageCount">
-                        <option value="" disabled selected>Image Count</option>
-                        <option value="1">1 Image</option>
-                        <option value="2">2 Images</option>
-                        <option value="3">3 Images</option>
-                        <option value="4">4 Images</option>
-                    </select>
-                </div>
-
-                <div class="select-wrapper">
-                    <select id="aspectRatio">
-                        <option value="" disabled selected>Aspect Ratio</option>
-                        <option value="1:1">Square (1:1)</option>
-                        <option value="16:9">Landscape (16:9)</option>
-                        <option value="9:16">Portrait (9:16)</option>
-                    </select>
-                </div>
-
-                <button class="generate-btn">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generate
-                </button>
-            </div>
-
-            <div class="results" id="resultArea">
-                <p class="no-result">No images generated yet. Use the Generate button.</p>
             </div>
         </div>
     </div>
 
-    <script src="javascript.js"></script>
+    <script>
+        // MASUKKAN API KEY KAMU DI SINI
+        const apiKey = "YOUR_API_KEY_DISINI"; 
+
+        const cityInput = document.getElementById("cityInput");
+        const searchBtn = document.getElementById("searchBtn");
+        const mainIcon = document.getElementById("mainIcon");
+
+        async function checkWeather(city) {
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${city}&appid=${apiKey}`;
+            
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (response.status == 404) {
+                    alert("Kota tidak ditemukan!");
+                    return;
+                }
+
+                if (response.status == 401) {
+                    alert("API Key salah atau belum aktif (tunggu 1-2 jam setelah daftar)");
+                    return;
+                }
+
+                document.querySelector(".city").innerHTML = data.name;
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°c";
+                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+
+                // Update Icon
+                if(data.weather[0].main == "Clouds") mainIcon.src = "https://cdn-icons-png.flaticon.com/512/414/414825.png";
+                else if(data.weather[0].main == "Clear") mainIcon.src = "https://cdn-icons-png.flaticon.com/512/4814/4814268.png";
+                else if(data.weather[0].main == "Rain") mainIcon.src = "https://cdn-icons-png.flaticon.com/512/3351/3351979.png";
+
+            } catch (err) {
+                console.error("Terjadi kesalahan:", err);
+            }
+        }
+
+        searchBtn.addEventListener("click", () => {
+            checkWeather(cityInput.value);
+        });
+
+        cityInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") checkWeather(cityInput.value);
+        });
+    </script>
 </body>
 </html>
